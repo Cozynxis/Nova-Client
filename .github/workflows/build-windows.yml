@@ -1,7 +1,7 @@
 name: Build Nova Client Windows
 on:
   push:
-    branches: [ main ]
+    branches: [ main, v0.2-ui-overhaul ]
   workflow_dispatch:
 jobs:
   build:
