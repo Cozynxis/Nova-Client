@@ -1,3 +1,4 @@
+using System.IO;
 using System.Text.Json;
 using NovaClient.Models;
 namespace NovaClient.Services;
