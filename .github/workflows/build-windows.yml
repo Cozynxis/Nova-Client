@@ -1,0 +1,26 @@
+name: Build Nova Client Windows
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Restore
+        run: dotnet restore src/NovaClient/NovaClient.csproj
+      - name: Build
+        run: dotnet build src/NovaClient/NovaClient.csproj -c Release --no-restore
+      - name: Publish self-contained EXE
+        run: dotnet publish src/NovaClient/NovaClient.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:DebugType=None -p:DebugSymbols=false -o publish
+      - name: Upload Nova Client
+        uses: actions/upload-artifact@v4
+        with:
+          name: Nova-Client-Windows-x64
+          path: publish/**
+          if-no-files-found: error
