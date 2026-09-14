@@ -16,7 +16,11 @@ public sealed class MicrosoftAuthService
         using var res=await _http.PostAsync("https://login.microsoftonline.com/consumers/oauth2/v2.0/devicecode",form); res.EnsureSuccessStatusCode();
         return (await res.Content.ReadFromJsonAsync<DeviceCodeSession>()) ?? throw new InvalidOperationException("Microsoft did not return a device code.");
     }
-    public void OpenVerificationPage(DeviceCodeSession session){ if(Uri.TryCreate(session.VerificationUri,out var uri)) Process.Start(new ProcessStartInfo(uri.ToString()){UseShellExecute=true}); }
+    public void OpenVerificationPage(DeviceCodeSession session)
+    {
+        if(Uri.TryCreate(session.VerificationUri, UriKind.Absolute, out var uri) && uri is not null)
+            Process.Start(new ProcessStartInfo(uri.ToString()){UseShellExecute=true});
+    }
 }
 public sealed class DeviceCodeSession
 {
